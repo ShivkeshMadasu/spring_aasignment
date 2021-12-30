@@ -13,17 +13,31 @@
     <h3>Book Store</h3>
     <hr>
     <div>
+        <div style="float:left">
         User: <span sec:authentication="name"></span>
         <br>
         Role(s): <span sec:authentication="principal.authorities"></span>
-        <br><br>
+        </div>
+        <div style="float:right">
+            <!-- Add a logout button -->
+            <form action="#" th:action="@{/logout}" method="POST">
+
+                <input type="submit" value="Logout" class="btn btn-outline-primary mt-2" />
+
+            </form>
+
+        </div>
+        <br> <br>
     </div>
+    <br><br>
+    <div>
+
     <!-- Add a button -->
     <a th:href="@{/customers/add(bookId=${book.id})}"
        class="btn btn-primary btn-sm mb-3">
         Add Customer
     </a>
-
+    </div>
     <table class="table table-bordered table-striped ">
         <thead class="thead-dark">
         <tr>
@@ -42,10 +56,12 @@
                 <a th:href="@{/customers/update(customerId=${customer.id},bookId=${book.id})}" class="btn btn-info btn-sm">
                     Update
                 </a>
+                <div sec:authorize="hasRole('ROLE_ADMIN')" style="display:inline-block">
                 <a class="btn btn-danger btn-sm" th:href="@{/customers/delete(customerId=${customer.id},bookId=${book.id})}"
                    onclick="if(!(confirm('Are you sure you want to delete this owner?'))) return false">
                     Delete
                 </a>
+                </div>
             </td>
 
         </tr>
@@ -56,13 +72,6 @@
     <a th:href="@{/books/list}">Back to Books List</a>
     <br>
     <br>
-    <!-- Add a logout button -->
-    <form action="#" th:action="@{/logout}"
-          method="POST">
-
-        <input type="submit" value="Logout" class="btn btn-outline-primary mt-2" />
-
-    </form>
 
 </div>
 

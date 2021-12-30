@@ -1,5 +1,6 @@
 package springboot.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springboot.dao.BookRepository;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Log4j2
 public class BookServiceImpl implements BookService{
 
     @Autowired
@@ -29,6 +31,7 @@ public class BookServiceImpl implements BookService{
         }
         else
         {
+            log.error("Couldn't find book with Id:"+theId);
             throw new RuntimeException("No Book found with Id: "+theId);
         }
         return book;
@@ -41,6 +44,7 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public void deleteById(int theId) {
+        findById(theId);
         bookRepository.deleteById(theId);
     }
 }

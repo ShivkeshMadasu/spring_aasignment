@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-        // use jdbc authentication ... oh yeah!!!
+        // use jdbc authentication
         auth.jdbcAuthentication().dataSource(securityDataSource);
 
     }
@@ -33,10 +33,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.authorizeRequests()
-                .anyRequest().authenticated()
+                .antMatchers("/").hasAnyRole("EMPLOYEE","ADMIN")
+                .antMatchers("/books/list").hasAnyRole("EMPLOYEE","ADMIN")
+                .antMatchers("/books/add").hasAnyRole("EMPLOYEE","ADMIN")
+                .antMatchers("/books/save").hasAnyRole("EMPLOYEE","ADMIN")
+                .antMatchers("/books/update").hasAnyRole("EMPLOYEE","ADMIN")
+                .antMatchers("/books/delete").hasRole("ADMIN")
+                .antMatchers("/customers/list").hasAnyRole("EMPLOYEE","ADMIN")
+                .antMatchers("/customers/add").hasAnyRole("EMPLOYEE","ADMIN")
+                .antMatchers("/customers/save").hasAnyRole("EMPLOYEE","ADMIN")
+                .antMatchers("/customers/update*").hasAnyRole("EMPLOYEE","ADMIN")
+                .antMatchers("/customers/delete").hasRole("ADMIN")
+                .antMatchers("/resources/**").permitAll()
                 .and()
                 .formLogin()
-                .loginPage("/showMyLoginPage")
+                .loginPage("/loginPage")
                 .loginProcessingUrl("/authenticateTheUser")
                 .permitAll()
                 .and()
@@ -47,12 +58,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 }
-/*.antMatchers("/employees/showForm*").hasAnyRole("MANAGER", "ADMIN")
-        .antMatchers("/employees/save*").hasAnyRole("MANAGER", "ADMIN")
-        .antMatchers("/employees/delete").hasRole("ADMIN")
-        .antMatchers("/employees/**").hasRole("EMPLOYEE")
-        .antMatchers("/resources/**").permitAll()
 
- */
 
 

@@ -14,11 +14,11 @@ public class Book {
     @Column(name="id")
     private int id;
 
-    @NotBlank(message="is required")
+    @NotBlank(message="Title is required")
     @Column(name="title")
     private String title;
 
-    @NotBlank(message="is required")
+    @NotBlank(message="Author is required")
     @Column(name="author")
     private String author;
 
@@ -29,6 +29,12 @@ public class Book {
     public Book(){}
 
     public Book(String title, String author) {
+        this.title = title;
+        this.author = author;
+    }
+
+    public Book(int id, String title, String author) {
+        this.id = id;
         this.title = title;
         this.author = author;
     }

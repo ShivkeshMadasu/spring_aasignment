@@ -2,6 +2,7 @@ package springboot.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +15,12 @@ public class Customer {
     @Column(name="id")
     private int id;
 
-    @NotBlank(message="is required")
+    @NotBlank(message="Name is required")
     @Column(name="name")
     private String name;
 
-    @NotBlank(message="is required")
+    @Pattern(regexp="^[789][0-9]{9}",message = "enter 10 digit mobile number")
+    @NotBlank(message="Mobile Number is required")
     @Column(name="mobile_number")
     private String mobileNumber;
 
@@ -27,6 +29,12 @@ public class Customer {
     private List<Book> bookList;
 
     public Customer(){}
+
+    public Customer(int id, String name, String mobileNumber) {
+        this.id = id;
+        this.name = name;
+        this.mobileNumber = mobileNumber;
+    }
 
     public int getId() {
         return id;
@@ -74,6 +82,6 @@ public class Customer {
                 ", name='" + name + '\'' +
                 ", mobileNumber='" + mobileNumber + '\'' +
                 ", BookList=" + bookList +
-                '}';
+                "}";
     }
 }

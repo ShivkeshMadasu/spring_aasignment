@@ -1,5 +1,6 @@
 package springboot.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springboot.dao.BookRepository;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Log4j2
 public class CustomerServiceImpl implements CustomerService{
 
     @Autowired
@@ -34,6 +36,7 @@ public class CustomerServiceImpl implements CustomerService{
         }
         else
         {
+            log.error("Couldn't find Customer with Id:"+theId);
             throw new RuntimeException("No Customer found with Id: "+theId);
         }
         return customer;
@@ -64,6 +67,7 @@ public class CustomerServiceImpl implements CustomerService{
 
     @Override
     public void deleteById(int theId) {
+        findById(theId);
         customerRepository.deleteById(theId);
     }
 }
