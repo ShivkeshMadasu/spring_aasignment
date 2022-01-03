@@ -32,7 +32,7 @@ public class BookServiceImpl implements BookService{
         else
         {
             log.error("Couldn't find book with Id:"+theId);
-            throw new RuntimeException("No Book found with Id: "+theId);
+            throw new IdNotFoundException("No Book found with Id: "+theId);
         }
         return book;
     }

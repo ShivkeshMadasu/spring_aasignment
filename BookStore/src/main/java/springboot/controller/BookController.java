@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import springboot.dto.BookDto;
 import springboot.entity.Book;
 import springboot.service.BookService;
 
@@ -20,6 +21,8 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
+    String bookForm = "books/book-form";
+
     @GetMapping("/list")
     public String listBooks(Model model)
     {
@@ -33,16 +36,20 @@ public class BookController {
     {
         Book theBook = new Book();
         model.addAttribute("book" ,theBook);
-        return "books/book-form";
+        return bookForm;
     }
 
     @PostMapping("/save")
     public String saveBook(
-            @ModelAttribute("book") @Valid Book theBook,
+            @ModelAttribute("book") @Valid BookDto bookDto,
             BindingResult bindingResult) {
 
+        Book theBook = new Book();
+        theBook.setId(bookDto.getId());
+        theBook.setTitle(bookDto.getTitle());
+        theBook.setAuthor(bookDto.getAuthor());
         if (bindingResult.hasErrors()) {
-            return "books/book-form";
+            return bookForm;
         }
         else {
             // save the book
@@ -58,7 +65,7 @@ public class BookController {
     {
         Book book = bookService.findById(theId);
         model.addAttribute("book",book);
-        return "books/book-form";
+        return bookForm;
     }
 
     @GetMapping("/delete")

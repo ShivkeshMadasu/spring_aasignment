@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import springboot.dto.BookDto;
+import springboot.dto.CustomerDto;
 import springboot.entity.Book;
 import springboot.entity.Customer;
 import springboot.service.BookService;
@@ -17,6 +19,9 @@ import javax.validation.Valid;
 @RequestMapping("/customers")
 @Log4j2
 public class CustomerController {
+
+    String customerForm = "customers/customer-form";
+    String redirect = "redirect:/customers/list?bookId=";
 
     @Autowired
     private BookService bookService;
@@ -40,20 +45,27 @@ public class CustomerController {
         model.addAttribute("book",book);
         Customer customer = new Customer();
         model.addAttribute("customer",customer);
-        return "customers/customer-form";
+        return customerForm;
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute("customer") @Valid Customer theCustomer, BindingResult bindingResult, @RequestParam("bookId") int bookId,
-                       @ModelAttribute("book") Book theBook)
+    public String save(@ModelAttribute("customer") @Valid CustomerDto customerDto, BindingResult bindingResult, @RequestParam("bookId") int bookId,
+                       @ModelAttribute("book") BookDto bookDto)
     {
+        Book theBook = new Book();
         theBook.setId(bookId);
+
+        Customer theCustomer = new Customer();
+        theCustomer.setId(customerDto.getId());
+        theCustomer.setName(customerDto.getName());
+        theCustomer.setMobileNumber(customerDto.getMobileNumber());
+
         if(bindingResult.hasErrors()){
-            return "customers/customer-form";}
+            return customerForm;}
         Book book = bookService.findById(bookId);
         customerService.saveBookCustomer(theCustomer, book);
 
-        return "redirect:/customers/list?bookId="+bookId;
+        return redirect+bookId;
     }
 
     @GetMapping("/update")
@@ -67,23 +79,30 @@ public class CustomerController {
     }
 
     @PostMapping("/update-customer")
-    public String updateCustomer(@ModelAttribute("customer") @Valid Customer theCustomer, BindingResult bindingResult, @RequestParam("bookId") int bookId,
-                       @ModelAttribute("book") Book theBook) {
+    public String updateCustomer(@ModelAttribute("customer") @Valid CustomerDto customerDto, BindingResult bindingResult, @RequestParam("bookId") int bookId,
+                       @ModelAttribute("book") BookDto bookDto) {
+        Book theBook = new Book();
         theBook.setId(bookId);
+
+        Customer theCustomer = new Customer();
+        theCustomer.setId(customerDto.getId());
+        theCustomer.setName(customerDto.getName());
+        theCustomer.setMobileNumber(customerDto.getMobileNumber());
+
         if (bindingResult.hasErrors()){
-            return "customers/customer-form";}
+            return customerForm;}
         Customer customer = customerService.findById(theCustomer.getId());
         theCustomer.setBookList(customer.getBookList());
         customerService.save(theCustomer);
 
-        return "redirect:/customers/list?bookId="+bookId;
+        return redirect+bookId;
 
     }
 
     @GetMapping("/delete")
     public String delete(@RequestParam("customerId") int customerId,@RequestParam("bookId") int bookId){
         customerService.deleteById(customerId);
-        return "redirect:/customers/list?bookId="+bookId;
+        return redirect+bookId;
     }
 
 }

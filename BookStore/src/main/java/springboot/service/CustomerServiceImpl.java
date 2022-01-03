@@ -37,7 +37,7 @@ public class CustomerServiceImpl implements CustomerService{
         else
         {
             log.error("Couldn't find Customer with Id:"+theId);
-            throw new RuntimeException("No Customer found with Id: "+theId);
+            throw new IdNotFoundException("No Customer found with Id: "+theId);
         }
         return customer;
     }

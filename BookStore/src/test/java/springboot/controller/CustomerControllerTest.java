@@ -11,6 +11,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import springboot.config.TestDataSourceConfig;
+import springboot.dto.BookDto;
+import springboot.dto.CustomerDto;
 import springboot.entity.Book;
 import springboot.entity.Customer;
 import springboot.service.BookService;
@@ -70,12 +72,18 @@ class CustomerControllerTest {
     @Test
     void save() throws Exception {
         Book book = new Book("Data Structures","Shivkesh");
+        BookDto bookDto = new BookDto(2,"Data Structures","Shivkesh");
+        CustomerDto customerDto = new CustomerDto(3,"Tharun","9876542312");
+        CustomerDto customerDto1 = new CustomerDto();
+        customerDto1.setId(3);
+        customerDto1.setName("");
+        customerDto1.setMobileNumber("");
         Customer customer = new Customer(3,"Tharun","9876542312");
         book.addCustomer(customer);
         when(bookService.findById(2)).thenReturn((book));
-        mockMvc.perform(post("/customers/save").param("bookId","2")).andExpect(status().isOk());
-        mockMvc.perform(post("/customers/save").flashAttr("customer", customer)
-                .flashAttr("book",book).param("bookId","2")).andExpect(status().is3xxRedirection());
+        mockMvc.perform(post("/customers/save").flashAttr("customer",customerDto1).flashAttr("book",bookDto).param("bookId","2")).andExpect(status().isOk());
+        mockMvc.perform(post("/customers/save").flashAttr("customer", customerDto)
+                .flashAttr("book",bookDto).param("bookId","2")).andExpect(status().is3xxRedirection());
     }
 
     @Test
@@ -91,12 +99,16 @@ class CustomerControllerTest {
     @Test
     void updateCustomer() throws Exception {
         Book book = new Book("Data Structures","Shivkesh");
+        BookDto bookDto = new BookDto(2,"Data Structures","Shivkesh");
+        CustomerDto customerDto = new CustomerDto(3,"Tharun","9876542312");
+        CustomerDto customerDto1 = new CustomerDto(3,"","");
         Customer customer = new Customer(3,"Tharun","9876542312");
         book.addCustomer(customer);
         when(customerService.findById(3)).thenReturn((customer));
-        mockMvc.perform(post("/customers/update-customer").param("bookId","2")).andDo(print()).andExpect(status().isOk());
-        mockMvc.perform(post("/customers/update-customer").flashAttr("customer", customer)
-                .flashAttr("book",book).param("bookId","2")).andDo(print()).andExpect(status().is3xxRedirection());
+        mockMvc.perform(post("/customers/update-customer").flashAttr("customer", customerDto1)
+                .flashAttr("book",bookDto).param("bookId","2")).andExpect(status().isOk());
+        mockMvc.perform(post("/customers/update-customer").flashAttr("customer", customerDto)
+                .flashAttr("book",bookDto).param("bookId","2")).andDo(print()).andExpect(status().is3xxRedirection());
     }
 
     @Test

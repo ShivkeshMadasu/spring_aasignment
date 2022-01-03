@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import springboot.config.TestDataSourceConfig;
+import springboot.dto.BookDto;
 import springboot.entity.Book;
 import springboot.service.BookService;
 import java.util.ArrayList;
@@ -57,9 +58,12 @@ class BookControllerTest {
 
     @Test
     void saveBook() throws Exception {
-        Book book = new Book("Data Structures","Shivkesh");
+        BookDto bookDto = new BookDto();
+        bookDto.setId(1);
+        bookDto.setTitle("Data Structures");
+        bookDto.setAuthor("Shivkesh");
         mockMvc.perform(post("/books/save")).andExpect(status().isOk());
-        mockMvc.perform(post("/books/save").flashAttr("book",book)).andExpect(status().is3xxRedirection());
+        mockMvc.perform(post("/books/save").flashAttr("book",bookDto)).andExpect(status().is3xxRedirection());
     }
 
     @Test

@@ -3,7 +3,6 @@ package springboot.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -67,14 +66,7 @@ public class Customer {
         this.bookList = bookList;
     }
 
-    public void addBook(Book theBook)
-    {
-        if(bookList == null)
-        {
-            bookList = new ArrayList<>();
-        }
-        bookList.add(theBook);
-    }
+
     @Override
     public String toString() {
         return "Customer{" +

@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import springboot.dao.BookRepository;
 import springboot.dao.CustomerRepository;
 import springboot.entity.Book;
 import springboot.entity.Customer;
@@ -28,6 +29,9 @@ class CustomerServiceImplTest {
     @Mock
     CustomerRepository customerRepository;
 
+    @Mock
+    BookRepository bookRepository;
+
     @Test
     void findAll() {
         List<Customer> customerList = new ArrayList<>();
@@ -47,6 +51,14 @@ class CustomerServiceImplTest {
         assertEquals("Sai",customer.getName());
         assertEquals("8567342564",customer.getMobileNumber());
         verify(customerRepository).findById(2);
+        Optional<Customer> result = Optional.empty();
+        when(customerRepository.findById(999)).thenReturn(result);
+        try {
+            customerService.findById(999);
+        }
+        catch (RuntimeException exception){
+            assertEquals("No Customer found with Id: 999",exception.getMessage());
+        }
     }
 
     @Test
@@ -61,18 +73,31 @@ class CustomerServiceImplTest {
 
     @Test
     void save() {
-        Customer customer = new Customer(3,"Tharun","9876542312");
+        Customer customer = new Customer();
+        customer.setId(3);
+        customer.setName("Tharun");
+        customer.setMobileNumber("9876542312");
         customerService.save(customer);
         verify(customerRepository).save(customer);
     }
 
     @Test
     void saveBookCustomer() {
+
         Book book = new Book("Data Structures","Shivkesh");
         Customer customer = new Customer(3,"Tharun","9876542312");
+        when(customerRepository.findByNameAndMobileNumber(customer.getName(),customer.getMobileNumber())).
+                thenReturn(Optional.of(customer));
         book.addCustomer(customer);
         customerService.saveBookCustomer(customer,book);
         assertEquals((book.getCustomerList()).get(0),customer);
+        verify(customerRepository).findByNameAndMobileNumber(customer.getName(),customer.getMobileNumber());
+        Optional<Customer> result = Optional.empty();
+        Customer customer1 = new Customer(5,"Sai","8567342564");
+        when(customerRepository.findByNameAndMobileNumber(customer1.getName(),customer1.getMobileNumber())).
+                thenReturn(result);
+        customerService.saveBookCustomer(customer1,book);
+        verify(bookRepository).save(book);
     }
 
     @Test

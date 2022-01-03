@@ -39,17 +39,27 @@ class BookServiceImplTest {
     }
 
     @Test
-    void findById() throws RuntimeException {
+    void findById(){
         when(bookRepository.findById(2)).thenReturn(Optional.of(new Book("The Rainbow", "Sai")));
         Book book = bookService.findById(2);
         assertEquals("The Rainbow",book.getTitle());
         assertEquals("Sai",book.getAuthor());
         verify(bookRepository).findById(2);
+        Optional<Book> result = Optional.empty();
+        when(bookRepository.findById(999)).thenReturn(result);
+        try {
+            bookService.findById(999);
+        }
+        catch (RuntimeException exception){
+            assertEquals("No Book found with Id: 999",exception.getMessage());
+        }
     }
 
     @Test
     void save() {
-        Book book = new Book("Data Structures","Shivkesh");
+        Book book = new Book();
+        book.setTitle("Data Structures");
+        book.setAuthor("Shivkesh");
         bookService.save(book);
         verify(bookRepository).save(book);
     }

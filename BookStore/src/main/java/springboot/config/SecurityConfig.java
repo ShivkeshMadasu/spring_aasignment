@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
 
@@ -25,25 +27,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
         // use jdbc authentication
-        auth.jdbcAuthentication().dataSource(securityDataSource);
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        auth.jdbcAuthentication().passwordEncoder(encoder).dataSource(securityDataSource);
 
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        String employee = "EMPLOYEE";
+        String admin = "ADMIN";
 
         http.authorizeRequests()
-                .antMatchers("/").hasAnyRole("EMPLOYEE","ADMIN")
-                .antMatchers("/books/list").hasAnyRole("EMPLOYEE","ADMIN")
-                .antMatchers("/books/add").hasAnyRole("EMPLOYEE","ADMIN")
-                .antMatchers("/books/save").hasAnyRole("EMPLOYEE","ADMIN")
-                .antMatchers("/books/update").hasAnyRole("EMPLOYEE","ADMIN")
-                .antMatchers("/books/delete").hasRole("ADMIN")
-                .antMatchers("/customers/list").hasAnyRole("EMPLOYEE","ADMIN")
-                .antMatchers("/customers/add").hasAnyRole("EMPLOYEE","ADMIN")
-                .antMatchers("/customers/save").hasAnyRole("EMPLOYEE","ADMIN")
-                .antMatchers("/customers/update*").hasAnyRole("EMPLOYEE","ADMIN")
-                .antMatchers("/customers/delete").hasRole("ADMIN")
+                .antMatchers("/").hasAnyRole(employee,admin)
+                .antMatchers("/*/list").hasAnyRole(employee,admin)
+                .antMatchers("/*/add").hasAnyRole(employee,admin)
+                .antMatchers("/*/save").hasAnyRole(employee,admin)
+                .antMatchers("/*/update").hasAnyRole(employee,admin)
+                .antMatchers("/*/delete").hasRole(admin)
+                .antMatchers("/customers/update*").hasAnyRole(employee,admin)
+
                 .antMatchers("/resources/**").permitAll()
                 .and()
                 .formLogin()
