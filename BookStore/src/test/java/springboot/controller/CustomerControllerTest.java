@@ -51,7 +51,7 @@ class CustomerControllerTest {
 
     @Test
     void listCustomer() throws Exception {
-        Book theBook = new Book(1,"OOPS","Rushikesh");
+        Book theBook = new Book(1,"OOPS","Rushikesh","Programming");
         List<Customer> customerList = new ArrayList<>();
         customerList.add(new Customer(1,"Shivkesh","9948892312"));
         customerList.add(new Customer(2,"Rushikesh","7702644649"));
@@ -62,7 +62,7 @@ class CustomerControllerTest {
 
     @Test
     void addCustomer() throws Exception {
-        Book theBook = new Book(1,"OOPS","Rushikesh");
+        Book theBook = new Book(1,"OOPS","Rushikesh","Programming");
         Customer customer = new Customer(1,"Shivkesh","9948892312");
         theBook.addCustomer(customer);
         when(bookService.findById(1)).thenReturn((theBook));
@@ -71,8 +71,8 @@ class CustomerControllerTest {
 
     @Test
     void save() throws Exception {
-        Book book = new Book("Data Structures","Shivkesh");
-        BookDto bookDto = new BookDto(2,"Data Structures","Shivkesh");
+        Book book = new Book("Data Structures","Shivkesh","Programming");
+        BookDto bookDto = new BookDto(2,"Data Structures","Shivkesh","Programming");
         CustomerDto customerDto = new CustomerDto(3,"Tharun","9876542312");
         CustomerDto customerDto1 = new CustomerDto();
         customerDto1.setId(3);
@@ -88,7 +88,7 @@ class CustomerControllerTest {
 
     @Test
     void update() throws Exception {
-        Book book = new Book(2,"Data Structures","Shivkesh");
+        Book book = new Book(2,"Data Structures","Shivkesh","Programming");
         Customer customer = new Customer(3,"Tharun","9876542312");
         when(bookService.findById(2)).thenReturn((book));
         when(customerService.findById(3)).thenReturn((customer));
@@ -98,8 +98,8 @@ class CustomerControllerTest {
 
     @Test
     void updateCustomer() throws Exception {
-        Book book = new Book("Data Structures","Shivkesh");
-        BookDto bookDto = new BookDto(2,"Data Structures","Shivkesh");
+        Book book = new Book("Data Structures","Shivkesh","Programming");
+        BookDto bookDto = new BookDto(2,"Data Structures","Shivkesh","Programming");
         CustomerDto customerDto = new CustomerDto(3,"Tharun","9876542312");
         CustomerDto customerDto1 = new CustomerDto(3,"","");
         Customer customer = new Customer(3,"Tharun","9876542312");
@@ -113,7 +113,7 @@ class CustomerControllerTest {
 
     @Test
     void delete() throws Exception {
-        Book book = new Book("Data Structures","Shivkesh");
+        Book book = new Book("Data Structures","Shivkesh","Programming");
         Customer customer = new Customer(3,"Tharun","9876542312");
         when(bookService.findById(2)).thenReturn((book));
         mockMvc.perform(get("/customers/delete").param("bookId","2").param("customerId","3"))

@@ -45,8 +45,8 @@ class BookControllerTest {
     @Test
     void listBooks() throws Exception {
         List<Book> books = new ArrayList<>();
-        books.add(new Book("Let Us C", "Yashwanth"));
-        books.add(new Book("The Rainbow","Sai"));
+        books.add(new Book("Let Us C", "Yashwanth","Programming"));
+        books.add(new Book("Data Structures","Sai","Programming"));
         when(bookService.findAll()).thenReturn(books);
         mockMvc.perform(get("/books/list")).andExpect(status().isOk());
     }
@@ -62,23 +62,30 @@ class BookControllerTest {
         bookDto.setId(1);
         bookDto.setTitle("Data Structures");
         bookDto.setAuthor("Shivkesh");
+        bookDto.setCategory("PROGRAMMING");
         mockMvc.perform(post("/books/save")).andExpect(status().isOk());
         mockMvc.perform(post("/books/save").flashAttr("book",bookDto)).andExpect(status().is3xxRedirection());
     }
 
     @Test
     void updateBook() throws Exception {
-        Book theBook = new Book(3,"OOPS","Rushikesh");
+        Book theBook = new Book(3,"OOPS","Rushikesh","Programming");
         when(bookService.findById(3)).thenReturn(theBook);
         mockMvc.perform(get("/books/update").param("bookId","3")).andExpect(status().isOk());
-
     }
 
     @Test
     void deleteBook() throws Exception {
-        Book theBook = new Book(3,"OOPS","Rushikesh");
+        Book theBook = new Book(3,"OOPS","Rushikesh","Programming");
         when(bookService.findById(3)).thenReturn(theBook);
         mockMvc.perform(get("/books/delete").param("bookId","3")).andExpect(status().is3xxRedirection());
     }
 
+    @Test
+    void searchBook() throws Exception {
+        List<Book> books = new ArrayList<>();
+        books.add(new Book("One Piece", "Eiichiro Oda","Comic"));
+        when(bookService.findAllByCategory("Comic")).thenReturn(books);
+        mockMvc.perform(get("/books/search").param("category","Comic")).andExpect(status().isOk());
+    }
 }

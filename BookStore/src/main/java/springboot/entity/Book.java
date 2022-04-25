@@ -22,21 +22,27 @@ public class Book {
     @Column(name="author")
     private String author;
 
+    @NotBlank(message="Category is required")
+    @Column(name="category")
+    private String category;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE})
     @JoinTable(name="book_customer", joinColumns = @JoinColumn(name="book_id"), inverseJoinColumns = @JoinColumn(name="customer_id"))
     private List<Customer> customerList;
 
     public Book(){}
 
-    public Book(String title, String author) {
+    public Book(String title, String author, String category) {
         this.title = title;
         this.author = author;
+        this.category = category;
     }
 
-    public Book(int id, String title, String author) {
+    public Book(int id, String title, String author, String category) {
         this.id = id;
         this.title = title;
         this.author = author;
+        this.category = category;
     }
 
 
@@ -64,6 +70,14 @@ public class Book {
         this.author = author;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public List<Customer> getCustomerList() {
         return customerList;
     }
@@ -85,6 +99,7 @@ public class Book {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
+                ", category='" + category + '\'' +
                 ", customerList=" + customerList +
                 '}';
     }

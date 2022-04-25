@@ -28,6 +28,8 @@ public class BookController {
     {
         List<Book> books = bookService.findAll();
         model.addAttribute("books",books);
+        Book theBook = new Book();
+        model.addAttribute("book" ,theBook);
         return "books/list-books";
     }
 
@@ -48,6 +50,7 @@ public class BookController {
         theBook.setId(bookDto.getId());
         theBook.setTitle(bookDto.getTitle());
         theBook.setAuthor(bookDto.getAuthor());
+        theBook.setCategory(bookDto.getCategory());
         if (bindingResult.hasErrors()) {
             return bookForm;
         }
@@ -73,6 +76,14 @@ public class BookController {
     {
         bookService.deleteById(theId);
         return "redirect:/books/list";
+    }
+
+    @GetMapping("/search")
+    public String searchBook(
+            @RequestParam("category") String bookCategory, Model model) {
+        List<Book> books = bookService.findAllByCategory(bookCategory);
+        model.addAttribute("books",books);
+        return "books/list-books";
     }
 
 }

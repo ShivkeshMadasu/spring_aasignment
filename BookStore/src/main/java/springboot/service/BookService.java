@@ -14,4 +14,6 @@ public interface BookService {
     public void save(Book theBook);
 
     public void deleteById(int theId);
+
+    List<Book> findAllByCategory(String category);
 }

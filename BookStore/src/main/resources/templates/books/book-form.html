@@ -50,6 +50,18 @@
 
         </div>
 
+        <div class="form-inline">
+
+            <input type="text" th:field="*{category}"
+                   class="form-control mb-4 col-4" placeholder="Book Category">
+
+            <!-- Add error message (if present) -->
+            <span th:if="${#fields.hasErrors('category')}"
+                  th:errors="*{category}"
+                  class="badge badge-danger ml-2 mb-4"></span>
+
+        </div>
+
         <button type="submit" class="btn btn-info col-2">Save</button>
 
     </form>

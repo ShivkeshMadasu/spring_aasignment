@@ -84,7 +84,7 @@ class CustomerServiceImplTest {
     @Test
     void saveBookCustomer() {
 
-        Book book = new Book("Data Structures","Shivkesh");
+        Book book = new Book("Data Structures","Shivkesh","Programming");
         Customer customer = new Customer(3,"Tharun","9876542312");
         when(customerRepository.findByNameAndMobileNumber(customer.getName(),customer.getMobileNumber())).
                 thenReturn(Optional.of(customer));

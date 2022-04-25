@@ -47,4 +47,9 @@ public class BookServiceImpl implements BookService{
         findById(theId);
         bookRepository.deleteById(theId);
     }
+
+    @Override
+    public List<Book> findAllByCategory(String category) {
+        return bookRepository.findAllByCategory(category);
+    }
 }

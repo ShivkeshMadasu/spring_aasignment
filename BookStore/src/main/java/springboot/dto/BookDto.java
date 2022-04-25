@@ -21,4 +21,7 @@ public class BookDto {
 
     @NotBlank(message="Author is required")
     private String author;
+
+    @NotBlank(message="Category is required")
+    private String category;
 }
